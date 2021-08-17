@@ -1,4 +1,4 @@
-module github.com/phillemans/LearnLangs
+module github.com/PHillemans/LearnLangs
 
 go 1.15
 

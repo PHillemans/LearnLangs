@@ -1,7 +1,7 @@
 package main
 
 import (
-  cmd "github.com/PHillemans/LearnLangs/cmd"
+  cmd "github.com/PHillemans/LearnLangs"
 )
 
 func main() {
