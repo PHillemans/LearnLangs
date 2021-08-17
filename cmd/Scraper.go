@@ -1,8 +1,15 @@
 package cmd
 
-import "strconv"
+import (
+	"errors"
+	"net/http"
+	"strconv"
+	"time"
 
-func RetreiveWordsForLang(lang string) TranslationCollection {
+	"github.com/gocolly/colly"
+)
+
+func RetreiveWordsForLang(lang string) (TranslationCollection, error) {
   var collection TranslationCollection
 
   c := colly.NewCollector()
@@ -33,6 +40,24 @@ func RetreiveWordsForLang(lang string) TranslationCollection {
     InfoLogger.Println("Visiting and getting words from:", r.URL)
   })
 
-  c.Visit("https://1000mostcommonwords.com/1000-most-common-"+lang+"-words/")
-  return collection
+  url := "https://1000mostcommonwords.com/1000-most-common-"+lang+"-words/"
+  if checkIfExists(url) != nil {
+    return nil, errors.New("No languages found")
+  } else {
+    c.Visit(url)
+    return collection, nil
+  }
 }
+
+func checkIfExists(url string) error {
+  c := &http.Client{Timeout: 10 * time.Second}
+  res, err := c.Get(url)
+
+  if res.StatusCode != 200 || err != nil {
+    return errors.New("does not exist")
+  }
+  return nil
+}
+
+
+type errMsg struct{ err error }
