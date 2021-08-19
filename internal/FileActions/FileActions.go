@@ -1,17 +1,18 @@
-package cmd
+package FileActions
 
 import (
 	"encoding/json"
 	"io/ioutil"
+
+  . "github.com/PHillemans/LearnLangs/internal/Types"
 )
 
 func ReadDataFile(name string) TranslationCollection  {
-  file, err := ioutil.ReadFile(name+".json")
+  file, err := ioutil.ReadFile("languages/"+name+".json")
   if err != nil {
     return nil
   }
   var translations TranslationCollection
-  InfoLogger.Println("Fetching internal file data")
   err = json.Unmarshal(file, &translations)
   if err != nil {
     return nil
@@ -20,15 +21,13 @@ func ReadDataFile(name string) TranslationCollection  {
   return translations
 }
 
-func (w TranslationCollection) WriteToDataFile(fileName string) error {
+func WriteToDataFile(w TranslationCollection, fileName string) error {
   file, err := json.MarshalIndent(w, "", "")
   if err != nil {
     return err
   }
 
-  InfoLogger.Println("Writing words to file")
-
-  err = ioutil.WriteFile(fileName+".json", file, 0644)
+  err = ioutil.WriteFile("languages/"+fileName+".json", file, 0644)
   if err != nil {
     return err
   } else {
